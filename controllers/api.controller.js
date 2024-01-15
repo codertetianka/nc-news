@@ -1,22 +1,17 @@
+const fs = require('fs/promises');
+
 exports.getApi = async (req, res, next) => {
   try {
-    res.status(200).send({
-        endpoints: {
-            "GET /api": {
-                description:
-                  "serves up a json representation of all the available endpoints of the api",
-              },
-              "GET /api/topics": {
-                description: "serves an array of all topics",
-                queries: [],
-                exampleResponse: {
-                  topics: [{ slug: "football", description: "Footie!" }],
-                },
-              },
-        }
-     
-    });
+
+const endpointsData = await fs.readFile('./endpoints.json', 'utf-8');
+
+const parsedDataEndpoints = JSON.parse(endpointsData);
+
+res.status(200).json(parsedDataEndpoints);
+
+    
   } catch (err) {
+    console.error('[err]', err)
     next(err);
   }
 };
