@@ -23,11 +23,12 @@ describe("GET /api/topics", () => {
     return request(app)
       .get("/api/topics")
       .expect(200)
-      .then((response) => {
-        const { body } = response;
+      .then(({body}) => {
+      
         const { topics } = body;
 
         expect(topics).toBeInstanceOf(Array);
+        expect(topics.length).toBe(3);
 
         topics.forEach((topic) => {
           expect(topic).toHaveProperty("slug");
