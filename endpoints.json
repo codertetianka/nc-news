@@ -12,5 +12,8 @@
   "GET /api/articles/:article_id": {
     "description": "retrieving an article by article id"
 
+ },
+ "GET /api/articles": {
+  "description": "retrieving all articles"
  }
 }
