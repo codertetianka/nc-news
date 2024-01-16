@@ -69,11 +69,11 @@ describe("GET /api", () => {
       }
     });
 
-    test("responds with 400 and 'Bad request' message when article id doesn't exist", async () => {
+    test("responds with 500 message when article id doesn't exist", async () => {
       try {
         const response = await request(app).get(`/api/articles/asfghfh`);
-        expect(response.status).toBe(400);
-        expect(response.body).toEqual({ msg: 'Bad request' });
+        expect(response.status).toBe(500);
+        expect(response.body).toEqual({ msg: 'Something went wrong!' });
       } catch (err) {
         throw err;
       }

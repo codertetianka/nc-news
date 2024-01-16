@@ -13,15 +13,15 @@ const {
   getArticleByIdController
 } = require("./controllers/articles-controller");
 
-app.use((err, req, res, next) => {
-  if (err) {
-    res.status(500).send("Something went wrong!");
-  }
-  
-});
 
 app.get("/api", getApi);
 app.get("/api/topics", getAllTopics);
 app.get('/api/articles/:article_id', getArticleByIdController);
+
+app.use((err, req, res, next) => {
+    if (err) {
+      res.status(500).send({ msg: "Something went wrong!"});
+    }
+});
 
 module.exports = app;

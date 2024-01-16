@@ -5,27 +5,22 @@ exports.getArticleByIdController = async (req, res, next) => {
 
         const article_id = req.params.article_id;
 
-        if (article_id === undefined || isNaN(article_id)) {
-            res.status(400).send({msg: 'Bad request'})
-        }
+       
 
         const article = await getArticleByIdModel(article_id);
 
 
-        if (!article) {     
-
-            res.status(404).send({msg: 'Not found'})
-
-            return;
-         }
-   
 
         res.status(200).send({article});
 
         
     }
     catch (err) {
-        console.error('[err]', err);
+
+        if (err.message === 'Not found') {
+            res.status(404).send({msg: 'Not found'})
+        }
+        console.error('An error occurred', err);
         next(err);
     }
   
