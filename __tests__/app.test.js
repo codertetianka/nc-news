@@ -3,6 +3,7 @@ const app = require("../app");
 const db = require("../db/connection");
 const seed = require("../db/seeds/seed");
 const testData = require("../db/data/test-data");
+const expectedEndpoints = require('../endpoints.json')
 
 afterAll(() => {
   return db.end();
@@ -37,3 +38,20 @@ describe("GET /api/topics", () => {
       });
   });
 });
+
+
+describe("GET /api", (done) => {
+
+  test("responds with endpoints documentation in endpoints.json", async() => {
+    try {
+    const response = await request(app).get('/api');
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual(expectedEndpoints);
+     
+    } catch (err) {
+      throw err;
+    }
+    });
+  
+   
+  });
