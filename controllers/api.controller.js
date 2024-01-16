@@ -11,7 +11,7 @@ res.status(200).json(parsedDataEndpoints);
 
     
   } catch (err) {
-    console.error('[err]', err)
+  
     next(err);
   }
 };

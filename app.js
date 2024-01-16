@@ -2,13 +2,26 @@ const express = require("express");
 const app = express();
 
 const {
-    getAllTopics
+  getAllTopics
 } = require("./controllers/topics.controller");
 
 const {
-    getApi
+  getApi
 } = require("./controllers/api.controller");
+
+const {
+  getArticleByIdController
+} = require("./controllers/articles-controller");
+
 
 app.get("/api", getApi);
 app.get("/api/topics", getAllTopics);
+app.get('/api/articles/:article_id', getArticleByIdController);
+
+app.use((err, req, res, next) => {
+    if (err) {
+      res.status(500).send({ msg: "Something went wrong!"});
+    }
+});
+
 module.exports = app;
