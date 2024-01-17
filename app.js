@@ -13,7 +13,11 @@ const {
   getArticleByIdController
 } = require("./controllers/articles-controller");
 
+const {
+  getAllArticlesController 
+} = require("./controllers/articles-controller")
 
+app.get("/api/articles", getAllArticlesController);
 app.get("/api", getApi);
 app.get("/api/topics", getAllTopics);
 app.get('/api/articles/:article_id', getArticleByIdController);

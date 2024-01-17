@@ -1,4 +1,4 @@
-const { selectArticles, getArticleByIdModel } = require("../models/articles-model");
+const { selectArticles, getArticleByIdModel, getAllArticlesModel } = require("../models/articles-model");
 
 exports.getArticleByIdController = async (req, res, next) => {
     try {
@@ -26,4 +26,31 @@ exports.getArticleByIdController = async (req, res, next) => {
   
     
 };
+
+
+exports.getAllArticlesController = async (req, res, next) => {
+    try {
+
+
+
+        const article = await getAllArticlesModel();
+
+
+
+        res.status(200).send({article});
+
+        
+    }
+    catch (err) {
+    console.error(err)
+        if (err.message === 'Not found') {
+            res.status(404).send({msg: 'Not found'})
+        }
+        console.error('An error occurred', err);
+        next(err);
+    }
+  
+    
+};
+
 

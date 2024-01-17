@@ -90,3 +90,32 @@ describe("GET /api", () => {
     }
   });
 });
+
+describe("GET /api/articles", () => {
+  test("receives status 200", () => {
+    return request(app).get("/api/articles").expect(200);
+  });
+  test(`Each reply must respond with an object which includes author, title, article_id, topic, created_at, votes, article_img_url and comment count`, async () => {
+    try {
+      const response = await request(app).get("/api/articles").expect(200);
+  
+      const { body } = response;
+      console.log('[body]', body)
+      expect(body.article.length).toBe(13);
+  
+      for (const article of body.article) {
+        expect(typeof article.author).toBe("string");
+        expect(typeof article.title).toBe("string");
+        expect(typeof article.article_id).toBe("number");
+        expect(typeof article.topic).toBe("string");
+        expect(typeof article.created_at).toBe("string");
+        expect(typeof article.votes).toBe("number");
+        expect(typeof article.article_img_url).toBe("string");
+        expect(typeof article.comment_count).toBe("number");
+      }
+    } catch (error) {
+      throw error;
+    }
+  });
+  
+});
