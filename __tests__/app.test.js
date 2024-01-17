@@ -95,12 +95,18 @@ describe("GET /api/articles", () => {
   test("receives status 200", () => {
     return request(app).get("/api/articles").expect(200);
   });
-  test(`Each reply must respond with an object which includes author, title, article_id, topic, created_at, votes, article_img_url and comment count`, async () => {
-    try {
+
+  test("200: responds with array of article objects sorted by created_at date property", async () => {
       const response = await request(app).get("/api/articles").expect(200);
+    const { body } = response;
+
+    expect(body.article).toBeSortedBy("created_at", { descending: true });
+  });
   
+  test("Each reply must respond with an object which includes author, title, article_id, topic, created_at, votes, article_img_url, and comment count", async () => {
+    const response = await request(app).get("/api/articles").expect(200);
       const { body } = response;
-      console.log('[body]', body)
+
       expect(body.article.length).toBe(13);
   
       for (const article of body.article) {
@@ -113,9 +119,8 @@ describe("GET /api/articles", () => {
         expect(typeof article.article_img_url).toBe("string");
         expect(typeof article.comment_count).toBe("number");
       }
-    } catch (error) {
-      throw error;
-    }
+  });
+});
   });
   
 });
