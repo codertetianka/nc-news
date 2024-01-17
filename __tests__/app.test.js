@@ -103,6 +103,13 @@ describe("GET /api/articles/:article_id/comments", () => {
     return request(app).get("/api/articles/1/comments").expect(200);
   });
 
+  test("responds with 404 message when passed a bad path", async () => {
+
+    const response = await request(app).get("/api/articles/1000/comments").expect(404);
+  
+    expect(response.body.msg).toBe("Not found");
+  });
+  
   test("Must respond with an array of objects which includes body, votes, author, article_id, created_at", async () => {
     const response = await request(app).get("/api/articles/1/comments").expect(200);
     const { body } = response;
@@ -115,6 +122,7 @@ describe("GET /api/articles/:article_id/comments", () => {
       expect(typeof comment.author).toBe("string");
       expect(typeof comment.article_id).toBe("number");
       expect(typeof comment.created_at).toBe("string");
+      expect(comment.article_id).toBe(1);
     }
   });
 });

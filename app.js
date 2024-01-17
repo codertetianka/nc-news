@@ -34,7 +34,13 @@ app.get("/api/articles/:article_id/comments", getArticleCommentsController);
 
 app.use((err, req, res, next) => {
     if (err) {
-      res.status(500).send({ msg: "Something went wrong!"});
+      if (err.message === 'Not found') {
+        res.status(404).send({ msg: err.message});  
+      } else {
+        res.status(500).send({ msg: "Something went wrong!"});
+      }
+      
+      console.error("An error occurred", err);
     }
 });
 
