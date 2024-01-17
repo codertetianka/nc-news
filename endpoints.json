@@ -15,5 +15,8 @@
  },
  "GET /api/articles": {
   "description": "retrieving all articles"
+ },
+ "GET /api/articles/:article_id/comments": {
+  "description": "retrieving comments by article id"
  }
 }
