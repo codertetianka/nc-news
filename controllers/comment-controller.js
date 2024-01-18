@@ -1,7 +1,7 @@
 const {
-  postCommentModel: postComment,
   getArticleCommentsModel,
   postCommentModel,
+  deleteCommentsModel,
 } = require("../models/comments-model");
 
 exports.postCommentController = async (req, res, next) => {
@@ -26,5 +26,17 @@ exports.getArticleCommentsController = async (req, res, next) => {
     res.status(200).send({ comments });
   } catch (err) {
     next(err);
+  }
+};
+
+exports.deleteCommentByIdController = async (req, res, next) => {
+  try {
+    const { comment_id } = req.params;
+
+    await deleteCommentsModel(comment_id);
+
+    res.status(204).send();
+  } catch (error) {
+    next(error);
   }
 };
