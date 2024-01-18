@@ -9,7 +9,7 @@ exports.getArticleCommentsModel = async (article_id) => {
   `);
 
   if (!rows.length) {
-    throw new Error("Not found");
+    throw new Error("Not Found");
   }
 
   return rows;
@@ -18,7 +18,7 @@ exports.getArticleCommentsModel = async (article_id) => {
 exports.postCommentModel = async ({ username, body }, article_id) => {
   try {
     if (!username || !body) {
-      throw new Error("Bad request");
+      throw new Error("Bad Request");
     }
 
     const { rows } = await db.query(

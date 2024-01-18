@@ -1,6 +1,7 @@
 const {
   postCommentModel: postComment,
   getArticleCommentsModel,
+  postCommentModel,
 } = require("../models/comments-model");
 
 exports.postCommentController = async (req, res, next) => {
@@ -8,7 +9,7 @@ exports.postCommentController = async (req, res, next) => {
     const newComment = req.body;
     const article_id = req.params.article_id;
 
-    const comment = await postComment(newComment, article_id);
+    const comment = await postCommentModel(newComment, article_id);
 
     res.status(201).send({ comment });
   } catch (error) {

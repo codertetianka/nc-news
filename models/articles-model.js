@@ -1,10 +1,12 @@
 const db = require("../db/connection");
 
 exports.getArticleByIdModel = async (article_id) => {
-  const {rows} = await db.query(`SELECT * FROM articles WHERE article_id = ${article_id}`);
+  const { rows } = await db.query(
+    `SELECT * FROM articles WHERE article_id = ${article_id}`
+  );
 
   if (!rows.length) {
-    throw new Error('Not found')
+    throw new Error("Not Found");
   }
   return rows[0];
 };
@@ -28,8 +30,22 @@ exports.getAllArticlesModel = async () => {
   `);
 
   if (!rows.length) {
-    throw new Error('Not found');
+    throw new Error("Not Found");
   }
 
   return rows;
+};
+
+exports.patchArticleModel = async (article_id, newVote) => {
+  try {
+    const result = await db.query(
+      "UPDATE articles SET votes = votes + $1 WHERE article_id = $2 RETURNING *;",
+      [newVote, article_id]
+    );
+
+    return result.rows[0];
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
 };
