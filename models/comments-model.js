@@ -32,3 +32,20 @@ exports.postCommentModel = async ({ username, body }, article_id) => {
     throw error;
   }
 };
+
+exports.deleteCommentsModel = async (comment_id) => {
+  try {
+    const { rows } = await db.query(
+      "DELETE FROM comments WHERE comment_id = $1 RETURNING *;",
+      [comment_id]
+    );
+
+    if (!rows.length) {
+      throw new Error("comment does not exist");
+    }
+
+    return rows;
+  } catch (error) {
+    throw error;
+  }
+};

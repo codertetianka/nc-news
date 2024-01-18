@@ -197,12 +197,40 @@ describe("Post /api/articles/:article_id/comments", () => {
         username: "butter_bridge",
         body: "This is a great article!",
       });
-
     expect(response.status).toBe(404);
     expect(response.body.msg).toBe("Not Found");
   });
   test("responds with a 400 when given an invalid article_id", async () => {
     const patch = { newVote: 1 };
     await request(app).patch("/api/articles/nonsense").send(patch).expect(400);
+  });
+});
+describe("DELETE comment by ID", () => {
+  test("responds with a 404 if no comment id is provided", async () => {
+    const response = await request(app).delete("/api/comments/").expect(404);
+  });
+  test("responds with an empty object if there's no content after deleting", async () => {
+    const response = await request(app).delete("/api/comments/3").expect(204);
+
+    expect(response.body).toEqual({});
+  });
+  test("responds with 404 error if trying to delete on a path that does not exist", async () => {
+    const response = await request(app)
+      .delete("/api/not-a-comment/3")
+      .expect(404);
+    expect(response.body.msg).toBeUndefined();
+  });
+  test("responds with 404 if attempting to delete a comment that does not exist", async () => {
+    const response = await request(app).delete("/api/comments/30").expect(404);
+
+    expect(response.body.msg).toEqual("Not Found");
+  });
+
+  test("responds with 400 if attempting to delete a non-integer comment id", async () => {
+    const response = await request(app)
+      .delete("/api/comments/test")
+      .expect(400);
+
+    expect(response.body.msg).toEqual("Bad Request");
   });
 });

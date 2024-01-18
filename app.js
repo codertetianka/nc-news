@@ -16,6 +16,7 @@ const {
 const {
   getArticleCommentsController,
   postCommentController,
+  deleteCommentByIdController,
 } = require("./controllers/comment-controller");
 
 app.get("/api", getApi);
@@ -28,7 +29,7 @@ app.get("/api/articles/:article_id", getArticleByIdController);
 app.post("/api/articles/:article_id/comments", postCommentController);
 app.get("/api/articles/:article_id/comments", getArticleCommentsController);
 app.patch("/api/articles/:article_id", patchArticleById);
-
+app.delete("/api/comments/:comment_id", deleteCommentByIdController);
 app.use((err, req, res, next) => {
   if (err) {
     if (
