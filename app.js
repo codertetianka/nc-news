@@ -31,18 +31,24 @@ app.get("/api/articles/:article_id", getArticleByIdController);
 app.get("/api/articles/:article_id/comments", getArticleCommentsController);
 
 app.post("/api/articles/:article_id/comments", postCommentController);
-
+// app.patch("/api/articles/:article_id", patchArticleById);
 app.use((err, req, res, next) => {
   if (err) {
-    if (err.message === "Not found") {
-      res.status(404).send({ msg: err.message });
-    } else if (err.message === "Bad request") {
-      res.status(400).send({ msg: err.message });
+    console.log({ message: err.message, detail: err.detail });
+    if (
+      err.message === "Not found" ||
+      err.message?.indexOf("insert or update on table") !== -1 ||
+      err.message?.indexOf("does not exist") !== -1
+    ) {
+      res.status(404).send({ msg: "Not Found" });
+    } else if (
+      err.message === "Bad request" ||
+      err.message.indexOf("invalid input syntax")
+    ) {
+      res.status(400).send({ msg: "Bad request" });
     } else {
       res.status(500).send({ msg: "Something went wrong!" });
     }
-
-    console.error("An error occurred", err);
   }
 });
 

@@ -55,11 +55,11 @@ describe("GET /api", () => {
       expect(response.body.article).toMatchObject(articleObj);
     });
 
-    test("responds with 500 message when article id doesn't exist", async () => {
+    test("responds with 404 message when article id doesn't exist", async () => {
       const response = await request(app)
         .get(`/api/articles/asfghfh`)
-        .expect(500);
-      expect(response.body).toEqual({ msg: "Something went wrong!" });
+        .expect(404);
+      expect(response.body).toEqual({ msg: "Not Found" });
     });
   });
 
@@ -67,7 +67,7 @@ describe("GET /api", () => {
     const response = await request(app)
       .get("/api/articles/1898929")
       .expect(404);
-    expect(response.body).toEqual({ msg: "Not found" });
+    expect(response.body).toEqual({ msg: "Not Found" });
   });
 });
 
@@ -112,7 +112,7 @@ describe("GET /api/articles/:article_id/comments", () => {
       .get("/api/articles/1000/comments")
       .expect(404);
 
-    expect(response.body.msg).toBe("Not found");
+    expect(response.body.msg).toBe("Not Found");
   });
 
   test("Must respond with an array of objects which includes body, votes, author, article_id, created_at", async () => {
@@ -144,8 +144,8 @@ describe("Post /api/articles/:article_id/comments", () => {
     expect(comment).toHaveProperty("author", "butter_bridge");
     expect(comment).toHaveProperty("body", "This is a test comment");
     expect(comment).toHaveProperty("article_id", 1);
+    expect(typeof comment.comment_id).toBe("number");
   });
-
   test("responses with a 400 error if no article details are provided", async () => {
     const commentData = {};
 
@@ -153,5 +153,27 @@ describe("Post /api/articles/:article_id/comments", () => {
       .post(`/api/articles/1000/comments`)
       .send(commentData);
     expect(response.status).toBe(400);
+  });
+  test("responses with a 404 error if the username does not exist", async () => {
+    const response = await request(app)
+      .post("/api/articles/123/comments")
+      .send({
+        username: "nonexistent_user",
+        body: "This is a great article!",
+      });
+
+    expect(response.status).toBe(404);
+    expect(response.body.msg).toBe("Not Found");
+  });
+  test("responses with a 404 error if the article_id does not exist", async () => {
+    const response = await request(app)
+      .post("/api/articles/1000/comments")
+      .send({
+        username: "butter_bridge",
+        body: "This is a great article!",
+      });
+
+    expect(response.status).toBe(404);
+    expect(response.body.msg).toBe("Not Found");
   });
 });
