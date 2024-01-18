@@ -18,5 +18,18 @@
  },
  "GET /api/articles/:article_id/comments": {
   "description": "retrieving comments by article id"
- }
+ },
+ "POST /api/articles/:article_id/comments": {
+  "description": "posts a comment to the article",
+  "exampleResponse":  {
+    "comment": {
+      "comment_id": 19,
+      "body": "This is a test comment",
+      "article_id": 1,
+      "author": "butter_bridge",
+      "votes": 0,
+      "created_at": "2024-01-18T10:44:42.613Z"
+    }
+  }
+  }
 }
