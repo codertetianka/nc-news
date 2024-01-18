@@ -201,4 +201,8 @@ describe("Post /api/articles/:article_id/comments", () => {
     expect(response.status).toBe(404);
     expect(response.body.msg).toBe("Not Found");
   });
+  test("responds with a 400 when given an invalid article_id", async () => {
+    const patch = { newVote: 1 };
+    await request(app).patch("/api/articles/nonsense").send(patch).expect(400);
+  });
 });

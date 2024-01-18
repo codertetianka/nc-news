@@ -45,7 +45,6 @@ exports.patchArticleModel = async (article_id, newVote) => {
 
     return result.rows[0];
   } catch (error) {
-    console.error(error);
     throw error;
   }
 };
