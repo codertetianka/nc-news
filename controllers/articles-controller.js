@@ -1,7 +1,7 @@
 const {
-  selectArticles,
   getArticleByIdModel,
   getAllArticlesModel,
+  patchArticleModel,
 } = require("../models/articles-model");
 
 exports.getArticleByIdController = async (req, res, next) => {
@@ -12,9 +12,6 @@ exports.getArticleByIdController = async (req, res, next) => {
 
     res.status(200).send({ article });
   } catch (err) {
-    if (err.message === "Not found") {
-      res.status(404).send({ msg: "Not Found" });
-    }
     console.error("An error occurred", err);
     next(err);
   }
@@ -27,7 +24,7 @@ exports.getAllArticlesController = async (req, res, next) => {
     res.status(200).send({ article });
   } catch (err) {
     console.error(err);
-    if (err.message === "Not found") {
+    if (err.message === "Not Found") {
       res.status(404).send({ msg: "Not Found" });
     }
     console.error("An error occurred", err);
@@ -35,14 +32,19 @@ exports.getAllArticlesController = async (req, res, next) => {
   }
 };
 
-// exports.patchArticleById = async (req, res, next) => {
-//   try {
-//     const { article_id } = req.params;
-//     const newVote = req.body;
+exports.patchArticleById = async (req, res, next) => {
+  try {
+    const { article_id } = req.params;
+    const { newVote } = req.body;
 
-//     const article = await patchArticle(article_id, newVote);
-//     res.status(200).send(article);
-//   } catch (error) {
-//     next(error);
-//   }
-// };
+    const article = await patchArticleModel(article_id, newVote);
+
+    if (!article) {
+      return res.status(404).send({ err: "Article Not Found" });
+    }
+
+    res.send({ article });
+  } catch (err) {
+    next(err);
+  }
+};
