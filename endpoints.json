@@ -18,5 +18,8 @@
  },
  "GET /api/articles/:article_id/comments": {
   "description": "retrieving comments by article id"
+ },
+ "POST /api/articles/:article_id/comments": {
+  "description": "posts a comment to the article"
  }
 }

@@ -5,7 +5,6 @@ const seed = require("../db/seeds/seed");
 const testData = require("../db/data/test-data");
 const expectedEndpoints = require("../endpoints.json");
 
-
 afterAll(() => {
   return db.end();
 });
@@ -50,20 +49,25 @@ describe("GET /api", () => {
         body: "I find this existence challenging",
         created_at: "2020-07-09T20:11:00.000Z",
         votes: 100,
-        article_img_url: "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+        article_img_url:
+          "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
       };
       expect(response.body.article).toMatchObject(articleObj);
     });
 
     test("responds with 500 message when article id doesn't exist", async () => {
-      const response = await request(app).get(`/api/articles/asfghfh`).expect(500);
-      expect(response.body).toEqual({ msg: 'Something went wrong!' });
+      const response = await request(app)
+        .get(`/api/articles/asfghfh`)
+        .expect(500);
+      expect(response.body).toEqual({ msg: "Something went wrong!" });
     });
   });
 
   test("responds with 404 and 'Not found' message when article isn't found", async () => {
-    const response = await request(app).get("/api/articles/1898929").expect(404);
-    expect(response.body).toEqual({ msg: 'Not found' });
+    const response = await request(app)
+      .get("/api/articles/1898929")
+      .expect(404);
+    expect(response.body).toEqual({ msg: "Not found" });
   });
 });
 
@@ -104,16 +108,18 @@ describe("GET /api/articles/:article_id/comments", () => {
   });
 
   test("responds with 404 message when passed a bad path", async () => {
+    const response = await request(app)
+      .get("/api/articles/1000/comments")
+      .expect(404);
 
-    const response = await request(app).get("/api/articles/1000/comments").expect(404);
-  
     expect(response.body.msg).toBe("Not found");
   });
-  
-  test("Must respond with an array of objects which includes body, votes, author, article_id, created_at", async () => {
-    const response = await request(app).get("/api/articles/1/comments").expect(200);
-    const { body } = response;
 
+  test("Must respond with an array of objects which includes body, votes, author, article_id, created_at", async () => {
+    const response = await request(app)
+      .get("/api/articles/1/comments")
+      .expect(200);
+    const { body } = response;
     expect(body.comments.length).toBe(11);
 
     for (const comment of body.comments) {
@@ -124,5 +130,28 @@ describe("GET /api/articles/:article_id/comments", () => {
       expect(typeof comment.created_at).toBe("string");
       expect(comment.article_id).toBe(1);
     }
+  });
+});
+describe("Post /api/articles/:article_id/comments", () => {
+  test("posts a comment to an article", async () => {
+    const response = await request(app).post("/api/articles/1/comments").send({
+      username: "butter_bridge",
+      body: "This is a test comment",
+    });
+    expect(response.status).toBe(201);
+    const { comment } = response.body;
+    expect(comment).toHaveProperty("comment_id");
+    expect(comment).toHaveProperty("author", "butter_bridge");
+    expect(comment).toHaveProperty("body", "This is a test comment");
+    expect(comment).toHaveProperty("article_id", 1);
+  });
+
+  test("responses with a 400 error if no article details are provided", async () => {
+    const commentData = {};
+
+    const response = await request(app)
+      .post(`/api/articles/1000/comments`)
+      .send(commentData);
+    expect(response.status).toBe(400);
   });
 });

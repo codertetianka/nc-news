@@ -5,3 +5,4 @@ exports.selectTopics = async () => {
 
   return rows;
 };
+

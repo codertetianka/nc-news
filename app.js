@@ -1,47 +1,49 @@
 const express = require("express");
 const app = express();
+const bodyParser = require("body-parser");
+
+const { getAllTopics } = require("./controllers/topics.controller");
+
+const { getApi } = require("./controllers/api.controller");
+
+app.use(bodyParser.json());
 
 const {
-  getAllTopics
-} = require("./controllers/topics.controller");
-
-const {
-  getApi
-} = require("./controllers/api.controller");
-
-const {
-  getArticleByIdController
+  getArticleByIdController,
 } = require("./controllers/articles-controller");
 
 const {
-  getAllArticlesController 
-} = require("./controllers/articles-controller")
+  getAllArticlesController,
+} = require("./controllers/articles-controller");
 
 const {
-  getArticleCommentsController 
-} = require("./controllers/comment-controller")
+  getArticleCommentsController,
+} = require("./controllers/comment-controller");
 
-
-
+const { postCommentController } = require("./controllers/comment-controller");
 
 app.get("/api", getApi);
 
 app.get("/api/topics", getAllTopics);
 
 app.get("/api/articles", getAllArticlesController);
-app.get('/api/articles/:article_id', getArticleByIdController);
+app.get("/api/articles/:article_id", getArticleByIdController);
 app.get("/api/articles/:article_id/comments", getArticleCommentsController);
 
+app.post("/api/articles/:article_id/comments", postCommentController);
+
 app.use((err, req, res, next) => {
-    if (err) {
-      if (err.message === 'Not found') {
-        res.status(404).send({ msg: err.message});  
-      } else {
-        res.status(500).send({ msg: "Something went wrong!"});
-      }
-      
-      console.error("An error occurred", err);
+  if (err) {
+    if (err.message === "Not found") {
+      res.status(404).send({ msg: err.message });
+    } else if (err.message === "Bad request") {
+      res.status(400).send({ msg: err.message });
+    } else {
+      res.status(500).send({ msg: "Something went wrong!" });
     }
+
+    console.error("An error occurred", err);
+  }
 });
 
 module.exports = app;

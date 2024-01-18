@@ -9,8 +9,26 @@ exports.getArticleCommentsModel = async (article_id) => {
   `);
 
   if (!rows.length) {
-    throw new Error('Not found');
+    throw new Error("Not found");
   }
 
   return rows;
+};
+
+exports.postCommentModel = async ({ username, body }, article_id) => {
+  try {
+    if (!username || !body) {
+      throw new Error("Bad request");
+    }
+
+    const { rows } = await db.query(
+      `INSERT INTO comments (author, body, article_id)
+        VALUES ($1, $2, $3) RETURNING *`,
+      [username, body, +article_id]
+    );
+
+    return rows[0];
+  } catch (error) {
+    throw error;
+  }
 };
