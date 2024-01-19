@@ -209,7 +209,7 @@ describe("DELETE comment by ID", () => {
   test("responds with a 404 if no comment id is provided", async () => {
     const response = await request(app).delete("/api/comments/").expect(404);
   });
-  test("responds with an empty object if there's no content after deleting", async () => {
+  test("responds with an empty object and 204 status if there's no content after deleting", async () => {
     const response = await request(app).delete("/api/comments/3").expect(204);
 
     expect(response.body).toEqual({});
