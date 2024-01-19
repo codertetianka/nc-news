@@ -11,8 +11,8 @@ exports.getArticleByIdModel = async (article_id) => {
   return rows[0];
 };
 
-exports.getAllArticlesModel = async () => {
-  const { rows } = await db.query(`
+exports.getAllArticlesModel = async (topic) => {
+  let query = `
     SELECT
       articles.article_id,
       articles.title,
@@ -24,10 +24,21 @@ exports.getAllArticlesModel = async () => {
       COUNT(comments.article_id)::int AS comment_count
     FROM articles
     LEFT JOIN comments
-    ON articles.article_id = comments.article_id
+      ON articles.article_id = comments.article_id
+  `;
+
+  if (topic) {
+    query += `WHERE articles.topic = $1`;
+  }
+
+  query += `
     GROUP BY articles.article_id
     ORDER BY articles.created_at DESC
-  `);
+  `;
+
+  const { rows } = await db.query(query, topic ? [topic] : []);
+
+  console.log("[rows]", { rows, topic });
 
   if (!rows.length) {
     throw new Error("Not Found");

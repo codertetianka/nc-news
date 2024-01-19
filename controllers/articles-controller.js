@@ -19,9 +19,10 @@ exports.getArticleByIdController = async (req, res, next) => {
 
 exports.getAllArticlesController = async (req, res, next) => {
   try {
-    const article = await getAllArticlesModel();
+    const topic = req.query.topic;
+    const articles = await getAllArticlesModel(topic);
 
-    res.status(200).send({ article });
+    res.status(200).send({ articles });
   } catch (err) {
     console.error(err);
     if (err.message === "Not Found") {
