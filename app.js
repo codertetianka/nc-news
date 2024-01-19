@@ -1,7 +1,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const app = express();
-const PORT = 3000;
+const PORT = 9090;
 app.use(bodyParser.json());
 
 const { getAllTopics } = require("./controllers/topics.controller");
@@ -53,15 +53,6 @@ app.use((err, req, res, next) => {
 
     console.error("An error occurred", err);
   }
-});
-
-const server = app.listen(PORT, function (err) {
-  if (err) console.log("Error in server setup");
-  console.log("Server listening on Port", PORT);
-});
-
-afterAll(() => {
-  server.close();
 });
 
 module.exports = app;
