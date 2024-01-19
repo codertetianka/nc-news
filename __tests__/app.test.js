@@ -285,4 +285,17 @@ describe("get all /api/articles?topic", () => {
     expect(response.status).toBe(404);
     expect(response.body.msg).toBe("Not Found");
   });
+  describe("GET /api/articles/:article_id (comment_count)", () => {
+    test("responds with an article including comment_count for a valid article_id", async () => {
+      const response = await request(app).get("/api/articles/1");
+
+      expect(response.status).toBe(200);
+      expect(response.body).toHaveProperty("article");
+
+      const article = response.body.article;
+
+      const commentCount = parseInt(article.comment_count, 10);
+      expect(typeof commentCount).toBe("number");
+    });
+  });
 });
