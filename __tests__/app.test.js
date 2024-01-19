@@ -234,3 +234,35 @@ describe("DELETE comment by ID", () => {
     expect(response.body.msg).toEqual("Bad Request");
   });
 });
+describe("get all /api/users", () => {
+  test("responds with an array of user objects with their types checked", async () => {
+    const response = await request(app).get("/api/users");
+    expect(response.status).toBe(200);
+
+    const { body } = response;
+    expect(body.length).toBe(4);
+    body.forEach((user) => {
+      expect(typeof user.username).toBe("string");
+      expect(typeof user.name).toBe("string");
+      expect(typeof user.avatar_url).toBe("string");
+    });
+  });
+  test("responds with an array of user objects", async () => {
+    const response = await request(app).get("/api/users");
+    expect(response.status).toBe(200);
+
+    const { body } = response;
+    expect(Array.isArray(body)).toBe(true);
+    body.forEach((user) => {
+      expect(typeof user.username).toBe("string");
+      expect(typeof user.name).toBe("string");
+      expect(typeof user.avatar_url).toBe("string");
+    });
+  });
+
+  test("responds with 404 when passed a bad path", async () => {
+    const response = await request(app).get("/api/notusers");
+    expect(response.status).toBe(404);
+    expect(response.body.msg).toBeUndefined();
+  });
+});
