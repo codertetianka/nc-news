@@ -80,16 +80,16 @@ describe("GET /api/articles", () => {
     const response = await request(app).get("/api/articles").expect(200);
     const { body } = response;
 
-    expect(body.article).toBeSortedBy("created_at", { descending: true });
+    expect(body.articles).toBeSortedBy("created_at", { descending: true });
   });
 
   test("Each reply must respond with an object which includes author, title, article_id, topic, created_at, votes, article_img_url, and comment count", async () => {
     const response = await request(app).get("/api/articles").expect(200);
     const { body } = response;
 
-    expect(body.article.length).toBe(13);
+    expect(body.articles.length).toBe(13);
 
-    for (const article of body.article) {
+    for (const article of body.articles) {
       expect(typeof article.author).toBe("string");
       expect(typeof article.title).toBe("string");
       expect(typeof article.article_id).toBe("number");
@@ -251,5 +251,38 @@ describe("get all /api/users", () => {
     const response = await request(app).get("/api/notusers");
     expect(response.status).toBe(404);
     expect(response.body.msg).toBeUndefined();
+  });
+});
+
+describe("get all /api/articles?topic", () => {
+  test("responds with status 200 and all articles, sorted by date, with comment count", async () => {
+    const response = await request(app).get("/api/articles");
+    expect(response.status).toBe(200);
+
+    expect(response.body.articles).toBeSorted({ descending: true });
+  });
+
+  test("responds with articles of the given topic, with correct length and topic", async () => {
+    const response = await request(app).get("/api/articles?topic=mitch");
+    expect(response.status).toBe(200);
+    expect(response.body.articles.length).toBe(12);
+    const articles = response.body.articles;
+    articles.forEach((article) => {
+      expect(article.topic).toBe("mitch");
+    });
+  });
+  test("responds with a 404 error when topic is non-existing", async () => {
+    const response = await request(app).get(
+      "/api/articles?topic=nonexistenttopic"
+    );
+    expect(response.status).toBe(404);
+  });
+
+  test("responds with 404 'Not Found' when topic doesn't exist in the database", async () => {
+    const response = await request(app).get(
+      "/api/articles?topic=nonexistenttopic"
+    );
+    expect(response.status).toBe(404);
+    expect(response.body.msg).toBe("Not Found");
   });
 });
