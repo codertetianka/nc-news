@@ -38,8 +38,6 @@ exports.getAllArticlesModel = async (topic) => {
 
   const { rows } = await db.query(query, topic ? [topic] : []);
 
-  console.log("[rows]", { rows, topic });
-
   if (!rows.length) {
     throw new Error("Not Found");
   }
