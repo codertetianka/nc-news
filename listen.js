@@ -1,6 +1,10 @@
 const app = require("./app.js");
+const db = require("./db/connection");
+const seed = require("./db/seeds/seed");
+const testData = require("./db/data/test-data");
+
 const PORT = process.env.PORT || 9090;
-app.listen(PORT, (error) => {
+const server = app.listen(PORT, (error) => {
   if (error) {
     console.log(error);
   } else {

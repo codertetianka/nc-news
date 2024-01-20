@@ -2,6 +2,7 @@ const {
   getArticleByIdModel,
   getAllArticlesModel,
   patchArticleModel,
+  postArticleModel,
 } = require("../models/articles-model");
 
 exports.getArticleByIdController = async (req, res, next) => {
@@ -45,6 +46,22 @@ exports.patchArticleById = async (req, res, next) => {
     }
 
     res.send({ article });
+  } catch (err) {
+    next(err);
+  }
+};
+
+exports.postArticleController = async (req, res, next) => {
+  try {
+    const { article } = req.body;
+
+    const articleCreated = await postArticleModel(article);
+
+    if (!articleCreated) {
+      return res.status(404).send({ err: "Article Not Found" });
+    }
+
+    res.status(201).send({ article: articleCreated });
   } catch (err) {
     next(err);
   }

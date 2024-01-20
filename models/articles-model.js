@@ -59,3 +59,24 @@ exports.patchArticleModel = async (article_id, newVote) => {
     throw error;
   }
 };
+
+exports.postArticleModel = async ({
+  title,
+  topic,
+  author,
+  body,
+  created_at,
+  article_img_url,
+}) => {
+  try {
+    const { rows } = await db.query(
+      `INSERT INTO articles (title, topic, author, body, created_at, article_img_url)
+        VALUES ($1, $2, $3, $4, $5, $6) RETURNING *`,
+      [title, topic, author, body, created_at, article_img_url]
+    );
+
+    return rows[0];
+  } catch (error) {
+    throw error;
+  }
+};

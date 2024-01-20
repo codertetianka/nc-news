@@ -1,10 +1,12 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const app = express();
-const PORT = 9090;
 app.use(bodyParser.json());
 
-const { getAllTopics } = require("./controllers/topics.controller");
+const {
+  getAllTopics,
+  postTopicController,
+} = require("./controllers/topics.controller");
 
 const { getApi } = require("./controllers/api.controller");
 
@@ -12,6 +14,7 @@ const {
   getAllArticlesController,
   patchArticleById,
   getArticleByIdController,
+  postArticleController,
 } = require("./controllers/articles-controller");
 
 const {
@@ -25,8 +28,10 @@ const { getUsersController } = require("./controllers/users.controller");
 app.get("/api", getApi);
 
 app.get("/api/topics", getAllTopics);
+app.post("/api/topics", postTopicController);
 
 app.get("/api/articles", getAllArticlesController);
+app.post("/api/articles", postArticleController);
 app.get("/api/articles/:article_id", getArticleByIdController);
 
 app.post("/api/articles/:article_id/comments", postCommentController);
@@ -34,6 +39,7 @@ app.get("/api/articles/:article_id/comments", getArticleCommentsController);
 app.patch("/api/articles/:article_id", patchArticleById);
 app.delete("/api/comments/:comment_id", deleteCommentByIdController);
 app.get("/api/users", getUsersController);
+
 app.use((err, req, res, next) => {
   if (err) {
     if (
