@@ -2,6 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const app = express();
 app.use(bodyParser.json());
+const cors = require("cors");
 
 const {
   getAllTopics,
@@ -24,7 +25,7 @@ const {
 } = require("./controllers/comment-controller");
 
 const { getUsersController } = require("./controllers/users.controller");
-
+app.use(cors());
 app.get("/api", getApi);
 
 app.get("/api/topics", getAllTopics);
